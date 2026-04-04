@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">AI Movie Recommendations 🎬</h2>
+
+    <form method="POST" class="mb-4">
+        {% csrf_token %}
+        <div class="input-group">
+            <input type="text" name="prompt" class="form-control" placeholder="Ej: películas de fantasía">
+            <button class="btn btn-primary" type="submit">Buscar</button>
+        </div>
+    </form>
+
+    {% if movies %}
+        <div class="row">
+            {% for movie, score in movies %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+
+                        {% if movie.image %}
+                            <img src="{{ movie.image.url }}" class="card-img-top">
+                        {% endif %}
+
+                        <div class="card-body">
+                            <h5 class="card-title">{{ movie.title }}</h5>
+                            <p class="card-text">
+                                {{ movie.description|truncatewords:20 }}
+                            </p>
+                        </div>
+
+                        <div class="card-footer">
+                            <small class="text-muted">
+                                Similarity: {{ score|floatformat:4 }}
+                            </small>
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
